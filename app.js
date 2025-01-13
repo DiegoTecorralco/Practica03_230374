@@ -22,9 +22,15 @@ app.use((req, res, next) => {
     next();
 });
 
+app.get('/login/:User',(req,res)=>{
+    req.session.User=req.params.User;
+    res.send("Usuario guardado");
+})
+
 // Ruta para mostrar la información de la sesión
 app.get('/session', (req, res) => {
     if (req.session) {
+        const User = req.session.User;
         const sessionId = req.session.id;
         const createdAt = new Date(req.session.createdAt); // Convertir la marca de tiempo a Date
         const lastAccess = new Date(req.session.lastAccess); // Convertir la marca de tiempo a Date
@@ -32,6 +38,7 @@ app.get('/session', (req, res) => {
 
         res.send(`
             <h1>Detalles de la sesión</h1>
+            <p><strong>Nombre de usuario:</strong> ${User}</p>           
             <p><strong>ID de sesión:</strong> ${sessionId}</p>
             <p><strong>Fecha de creación de la sesión:</strong> ${createdAt}</p>
             <p><strong>Último acceso:</strong> ${lastAccess}</p>
