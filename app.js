@@ -35,41 +35,43 @@ app.get('/login/',(req,res)=>{
 })
 
 //Ruta oara actualizar la decha de última consulta
-app.get('/update',(req,res)=>{
-    if(!req.session.createdAt){
+app.get('/update', (req, res) => {
+    if (req.session.createdAt) {
         req.session.lastAccess = new Date();
         res.send("La fecha de último acceso ha sido actualizada exitosamente");
-    }else{
+    } else {
         res.send("No hay una sesión activa");
     }
-})
+});
+
 //Ruta para obtener el estado de la sesión
-app.get('/status',(req,res)=>{
-    if(!req.session.createdAt){
+app.get('/status', (req, res) => {
+    if (req.session.createdAt) {
         const now = new Date();
         const started = new Date(req.session.createdAt);
         const lastUpdate = new Date(req.session.lastAccess);
 
-//Calcular la antiguedad de la sesión
-const sessionAgeMs= now - started;
+        // Calcular la antigüedad de la sesión
+        const sessionAgeMs = now - started;
         const hours = Math.floor(sessionAgeMs / (1000 * 60 * 60));
-        const minutes = Math.floor((sessionAgeMs % (1000 * 60 * 60)) / (1000 *60 ));
+        const minutes = Math.floor((sessionAgeMs % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((sessionAgeMs % (1000 * 60)) / 1000);
 
-    // Convertir las fechas al uso horario de CDMX
-    const createdAt_CDMX = moment(started).tz('America/Mexico_City').format('YYYY-MM-DD HH:mm:ss');
-    const lastAccess_CDMX = moment(started).tz('America/Mexico_City').format('YYYY-MM-DD HH:mm:ss');
-    res.json({
-        mensaje: 'Estado de la sesión',
-        sesionID: req.sessionID,
-        inicio: createdAt_CDMX,
-        ultimoAcceso: lastAccess_CDMX,
-        antiguedas: `${hours} horas, ${minutes} minutos, ${seconds} segundos`
-    });
-    }else{
+        // Convertir las fechas al uso horario de CDMX
+        const createdAt_CDMX = moment(started).tz('America/Mexico_City').format('YYYY-MM-DD HH:mm:ss');
+        const lastAccess_CDMX = moment(lastUpdate).tz('America/Mexico_City').format('YYYY-MM-DD HH:mm:ss');
+        res.json({
+            mensaje: 'Estado de la sesión',
+            sesionID: req.sessionID,
+            inicio: createdAt_CDMX,
+            ultimoAcceso: lastAccess_CDMX,
+            antiguedad: `${hours} horas, ${minutes} minutos, ${seconds} segundos`
+        });
+    } else {
         res.send("No hay una sesión activa");
     }
-})
+});
+
 
 /*// Ruta para mostrar la información de la sesión
 app.get('/session', (req, res) => {
