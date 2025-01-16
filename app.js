@@ -12,7 +12,7 @@ app.use(session({
     cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 }  // maxAge para los milisegundos
 }));
 
-/*// Middleware para inicializar y actualizar tiempos en la sesión
+// Middleware para inicializar y actualizar tiempos en la sesión
 app.use((req, res, next) => {
     if (req.session) {
         if (!req.session.createdAt) {
@@ -21,7 +21,12 @@ app.use((req, res, next) => {
         req.session.lastAccess = Date.now(); // Actualizar el último acceso en milisegundos
     }
     next();
-});*/
+});
+
+app.get('/loginn/:User',(req,res)=>{
+    req.session.User=req.params.User;
+    res.send("Usuario guardado");
+});
 
 //Ruta para inicializar la sesion
 app.get('/login/',(req,res)=>{
@@ -73,7 +78,7 @@ app.get('/status', (req, res) => {
 });
 
 
-/*// Ruta para mostrar la información de la sesión
+// Ruta para mostrar la información de la sesión
 app.get('/session', (req, res) => {
     if (req.session) {
         const User = req.session.User;
@@ -91,7 +96,7 @@ app.get('/session', (req, res) => {
             <p><strong>Duración de la sesión (en segundos):</strong> ${sessionDuration}</p>
         `);
     }
-});*/
+});
 
 // Ruta para cerrar la sesión
 app.get('/logout', (req, res) => {
